@@ -2,7 +2,14 @@ pragma solidity ^0.4.24;
 
 import {ERC20} from "./zeppelin/token/ERC20/ERC20.sol";
 
-contract WalletLibrary {
+contract Logger {
+  event Log(string _msg);
+  function log(string _msg) external {
+    emit Log(_msg);
+  }
+}
+
+contract WalletLibrary is Logger {
   address public owner;
   address public lib;
   mapping (address => bool) public isWallet;
@@ -18,11 +25,11 @@ contract WalletLibrary {
     isWallet[addr] = true;
   }
 
-  function transferOwnership(address _next) public auth {
+  function transferOwnership(address _next) public auth(msg.sender) {
     owner = _next;
   }
 
-  function withdraw(ERC20 _token, uint _amount) public auth {
+  function withdraw(ERC20 _token, uint _amount) public auth(msg.sender) {
     if (address(_token) == 0) {
       msg.sender.transfer(_amount);
     } else {
