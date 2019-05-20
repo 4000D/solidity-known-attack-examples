@@ -19,6 +19,8 @@ contract WalletLibrary is Logger {
     _;
   }
 
+  function () public external {}
+
   function setWallet() public {
     require(!isWallet[msg.sender]);
     require(isContract(msg.sender));
